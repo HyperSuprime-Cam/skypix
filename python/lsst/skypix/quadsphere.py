@@ -688,13 +688,13 @@ class QuadSpherePixelization(object):
             raise RuntimeError(
                 'Invalid sky-pixel id %d - value must be in range [0, %d)' %
                 (pixelId, 6 * R2))
-        r = pixelId / R2
+        r = pixelId//R2
         if r > 0 and r < 5:
             # equatorial pixel case
             pixelId -= R2
-            y = pixelId / (4 * R)
+            y = pixelId//(4 * R)
             pixelId -= 4 * R * y
-            root = 1 + pixelId / R
+            root = 1 + pixelId//R
             x = pixelId - (root - 1) * R
             return (root, x, y)
         # polar root pixels
@@ -711,7 +711,7 @@ class QuadSpherePixelization(object):
             ring = 0.5 * (s + (s & 1))
         r = 2.0 * ring - 1.0
         if r < 0.0:
-            return (root, R / 2, R / 2)
+            return (root, R//2, R//2)
         i -= r * r
         if i <= 2.0 * ring:
             dx = ring - i
@@ -751,7 +751,7 @@ class QuadSpherePixelization(object):
             return
         if dx >= dy:
             # Split x range and recurse
-            xsplit = box[0] + dx / 2
+            xsplit = box[0] + dx//2
             p = poly.clip(self.xplane[root][xsplit][1])
             if p != None:
                 self._intersect(pixels, p, root, (box[0], xsplit, box[2], box[3]))
@@ -760,7 +760,7 @@ class QuadSpherePixelization(object):
                 self._intersect(pixels, p, root, (xsplit, box[1], box[2], box[3]))
         else:
             # Split y range and recurse
-            ysplit = box[2] + dy / 2
+            ysplit = box[2] + dy//2
             p = poly.clip(self.yplane[root][ysplit][1])
             if p != None:
                 self._intersect(pixels, p, root, (box[0], box[1], box[2], ysplit))

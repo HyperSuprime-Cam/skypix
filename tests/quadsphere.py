@@ -23,10 +23,9 @@ from builtins import range
 
 
 import math
-import pdb
 import unittest
 
-import lsst.utils.tests as utilsTests
+import lsst.utils.tests
 import lsst.daf.base as dafBase
 import lsst.afw.image as afwImage
 import lsst.geom as geom
@@ -73,7 +72,7 @@ class QuadSpherePixelizationTestCase(unittest.TestCase):
                     self._checkNeighbors(qs, root, i, R - 1, tolerance)
                     self._checkNeighbors(qs, root, R - 1, i, tolerance)
                 # test root pixel centers
-                self._checkNeighbors(qs, root, R / 2, R / 2, tolerance)
+                self._checkNeighbors(qs, root, R//2, R//2, tolerance)
 
     def testNeighborCommutativity(self):
         """Tests that if pixel P1 is a neighbor of pixel P2,
@@ -89,7 +88,7 @@ class QuadSpherePixelizationTestCase(unittest.TestCase):
                     self._checkNeighborCommutativity(qs, root, i, R - 1)
                     self._checkNeighborCommutativity(qs, root, R - 1, i)
                 # test root pixel centers
-                self._checkNeighborCommutativity(qs, root, R / 2, R / 2)
+                self._checkNeighborCommutativity(qs, root, R//2, R//2)
 
     def testSpiral(self):
         """Tests that pixels are ordered in an approximate spiral.
@@ -167,13 +166,15 @@ class QuadSpherePixelizationTestCase(unittest.TestCase):
         self.assertTrue(qs.getGeometry(182720).contains(poly))
 
 
-def suite():
-    utilsTests.init()
-    return unittest.TestSuite(unittest.makeSuite(QuadSpherePixelizationTestCase))
+def setup_module(module):
+    lsst.utils.tests.init()
 
 
-def run(shouldExit=False):
-    utilsTests.run(suite(), shouldExit)
+class MatchMemoryTestCase(lsst.utils.tests.MemoryTestCase):
+    pass
 
-if __name__ == '__main__':
-    run(True)
+
+if __name__ == "__main__":
+    import sys
+    setup_module(sys.modules[__name__])
+    unittest.main()
