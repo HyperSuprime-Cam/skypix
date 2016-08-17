@@ -1,7 +1,7 @@
+from __future__ import division
 from builtins import map
 from builtins import range
 from builtins import object
-from past.builtins import long
 #
 # LSST Data Management System
 # Copyright 2008, 2009, 2010 LSST Corporation.
@@ -25,6 +25,7 @@ from past.builtins import long
 #
 
 import math
+import numbers
 
 import lsst.pex.policy as pexPolicy
 import lsst.geom as geom
@@ -94,9 +95,9 @@ class QuadSpherePixelization(object):
         paddingRad: the angular separation (rad) by which fiducial sky-pixels
                     are to be padded.
         """
-        if not isinstance(resolution, (int, long)):
+        if not isinstance(resolution, numbers.Integral):
             raise TypeError(
-                'Quad-sphere resolution parameter must be an int or long')
+                'Quad-sphere resolution parameter must be an integer')
         if resolution < 3 or resolution > 16384:
             raise RuntimeError(
                 'Quad-sphere resolution must be in range [3, 16384]')
@@ -639,8 +640,8 @@ class QuadSpherePixelization(object):
         """Maps from a root pixel number and x, y pixel coordinates
         to a sky-pixel id.
         """
-        if not all(isinstance(p, (int, long)) for p in (root, x, y)):
-            raise TypeError('Pixel coordinates must all be of type int or long')
+        if not all(isinstance(p, numbers.Integral) for p in (root, x, y)):
+            raise TypeError('Pixel coordinates must all be an integer')
         if root < 0 or root > 5:
             raise RuntimeError('root pixel number must be in range [0,6)')
         R = self.resolution
@@ -679,9 +680,9 @@ class QuadSpherePixelization(object):
         """Maps from a sky-pixel id to a root pixel number and x, y 
         pixel coordinates.
         """
-        if not isinstance(pixelId, (int, long)):
+        if not isinstance(pixelId, numbers.Integral):
             raise TypeError(
-                'Sky-pixel id must be an int or long')
+                'Sky-pixel id must be an integer')
         R = self.resolution
         R2 = R ** 2
         if pixelId < 0 or pixelId >= 6 * R2:
@@ -728,14 +729,14 @@ class QuadSpherePixelization(object):
         return (root, int(dx + 0.5 * (R - 1)), int(dy + 0.5 * (R - 1)))
 
     def _fiducialXPlane(self, root, ix):
-        assert isinstance(ix, (int,long)) and ix >= 0 and ix <= self.resolution
+        assert isinstance(ix, numbers.Integral) and ix >= 0 and ix <= self.resolution
         x = 2.0 * float(ix) / float(self.resolution) - 1.0
         c, b = self.center[root], self.x[root]
         v = (c[0] + x * b[0], c[1] + x * b[1], c[2] + x * b[2])
         return geom.normalize(self.xrot[root](v, 1.0, 0.0))
 
     def _fiducialYPlane(self, root, iy):
-        assert isinstance(iy, (int,long)) and iy >= 0 and iy <= self.resolution
+        assert isinstance(iy, numbers.Integral) and iy >= 0 and iy <= self.resolution
         y = 2.0 * float(iy) / float(self.resolution) - 1.0
         c, b = self.center[root], self.y[root]
         v = (c[0] + y * b[0], c[1] + y * b[1], c[2] + y * b[2])
