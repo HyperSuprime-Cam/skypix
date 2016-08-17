@@ -1,7 +1,8 @@
-# 
+from builtins import range
+#
 # LSST Data Management System
 # Copyright 2008, 2009, 2010 LSST Corporation.
-# 
+#
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
 #
@@ -9,23 +10,22 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
-# You should have received a copy of the LSST License Statement and 
-# the GNU General Public License along with this program.  If not, 
+#
+# You should have received a copy of the LSST License Statement and
+# the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
 
-from itertools import izip
+
 import math
-import pdb
 import unittest
 
-import lsst.utils.tests as utilsTests
+import lsst.utils.tests
 import lsst.daf.base as dafBase
 import lsst.afw.image as afwImage
 import lsst.geom as geom
@@ -35,11 +35,12 @@ import lsst.skypix as skypix
 class QuadSpherePixelizationTestCase(unittest.TestCase):
     """Tests for quad-sphere based sky pixelization.
     """
+
     def testIdAndCoord(self):
-        for R in (3,4,16,17):
+        for R in (3, 4, 16, 17):
             qs = skypix.QuadSpherePixelization(R, 0.0)
             self.assertEqual(len(qs), 6 * R**2)
-            for i in xrange(6 * R**2):
+            for i in range(6 * R**2):
                 root, x, y = qs.coords(i)
                 self.assertEqual(qs.id(root, x, y), i)
 
@@ -63,15 +64,15 @@ class QuadSpherePixelizationTestCase(unittest.TestCase):
         tolerance = 1.0
         for R in (180, 181):
             qs = skypix.QuadSpherePixelization(R, 0.0)
-            for root in xrange(6):
+            for root in range(6):
                 # test root pixel edges and corners
-                for i in xrange(R - 1):
+                for i in range(R - 1):
                     self._checkNeighbors(qs, root, i, 0, tolerance)
                     self._checkNeighbors(qs, root, 0, i, tolerance)
                     self._checkNeighbors(qs, root, i, R - 1, tolerance)
                     self._checkNeighbors(qs, root, R - 1, i, tolerance)
                 # test root pixel centers
-                self._checkNeighbors(qs, root, R / 2, R / 2, tolerance)
+                self._checkNeighbors(qs, root, R//2, R//2, tolerance)
 
     def testNeighborCommutativity(self):
         """Tests that if pixel P1 is a neighbor of pixel P2,
@@ -79,15 +80,15 @@ class QuadSpherePixelizationTestCase(unittest.TestCase):
         """
         for R in (16, 17):
             qs = skypix.QuadSpherePixelization(R, 0.0)
-            for root in xrange(6):
+            for root in range(6):
                 # test root pixel edges and corners
-                for i in xrange(R - 1):
+                for i in range(R - 1):
                     self._checkNeighborCommutativity(qs, root, i, 0)
                     self._checkNeighborCommutativity(qs, root, 0, i)
                     self._checkNeighborCommutativity(qs, root, i, R - 1)
                     self._checkNeighborCommutativity(qs, root, R - 1, i)
                 # test root pixel centers
-                self._checkNeighborCommutativity(qs, root, R / 2, R / 2)
+                self._checkNeighborCommutativity(qs, root, R//2, R//2)
 
     def testSpiral(self):
         """Tests that pixels are ordered in an approximate spiral.
@@ -106,11 +107,11 @@ class QuadSpherePixelizationTestCase(unittest.TestCase):
         """Tests polygon sky-pixel intersection.
         """
         qs1 = skypix.QuadSpherePixelization(3, 0.0)
-        polygons = [qs1.getGeometry(qs1.id(r, 1, 1), True) for r in xrange(6)]
+        polygons = [qs1.getGeometry(qs1.id(r, 1, 1), True) for r in range(6)]
         qs2 = skypix.QuadSpherePixelization(4, 0.0)
         results = [set([qs2.id(r, 1, 1), qs2.id(r, 2, 1),
-                        qs2.id(r, 1, 2), qs2.id(r, 2, 2)]) for r in xrange(6)]
-        for poly, res in izip(polygons, results):
+                        qs2.id(r, 1, 2), qs2.id(r, 2, 2)]) for r in range(6)]
+        for poly, res in zip(polygons, results):
             self.assertEqual(set(qs2.intersect(poly)), res)
 
     def testGeometry(self):
@@ -118,7 +119,7 @@ class QuadSpherePixelizationTestCase(unittest.TestCase):
         """
         for R in (4, 5):
             qs = skypix.QuadSpherePixelization(R, math.radians(1.0))
-            for i in xrange(6 * R ** 2):
+            for i in range(6 * R ** 2):
                 pixel = qs.getGeometry(i, True)
                 paddedPixel = qs.getGeometry(i, False)
                 self.assertTrue(paddedPixel.contains(pixel))
@@ -137,7 +138,7 @@ class QuadSpherePixelizationTestCase(unittest.TestCase):
         """Tests intersection of an image (WCS and dimensions) with a
         quad-sphere pixelization.
         """
-        #metadata taken from CFHT data v695856-e0/v695856-e0-c000-a00.sci_img.fits
+        # metadata taken from CFHT data v695856-e0/v695856-e0-c000-a00.sci_img.fits
         metadata = dafBase.PropertySet()
         metadata.set("SIMPLE", "T")
         metadata.set("BITPIX", -32)
@@ -165,13 +166,15 @@ class QuadSpherePixelizationTestCase(unittest.TestCase):
         self.assertTrue(qs.getGeometry(182720).contains(poly))
 
 
-def suite():
-    utilsTests.init()
-    return unittest.TestSuite(unittest.makeSuite(QuadSpherePixelizationTestCase))
+def setup_module(module):
+    lsst.utils.tests.init()
 
-def run(shouldExit=False):
-    utilsTests.run(suite(), shouldExit)
 
-if __name__ == '__main__':
-    run(True)
+class MatchMemoryTestCase(lsst.utils.tests.MemoryTestCase):
+    pass
 
+
+if __name__ == "__main__":
+    import sys
+    setup_module(sys.modules[__name__])
+    unittest.main()

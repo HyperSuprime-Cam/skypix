@@ -2,5 +2,7 @@ setupRequired(utils)
 setupRequired(pex_policy)
 setupRequired(geom)
 setupRequired(afw)
+setupRequired(python_future)
+setupRequired(sconsUtils)
 
 envPrepend(PYTHONPATH, ${PRODUCT_DIR}/python)

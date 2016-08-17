@@ -12,5 +12,7 @@ doc/html
 doc/*.tag
 doc/*.inc
 doc/doxygen.conf
+doc/xml
 tests/.tests
+tests/.cache
 version.py
