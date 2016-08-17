@@ -1,3 +1,7 @@
+from builtins import map
+from builtins import range
+from builtins import object
+from past.builtins import long
 #
 # LSST Data Management System
 # Copyright 2008, 2009, 2010 LSST Corporation.
@@ -121,11 +125,11 @@ class QuadSpherePixelization(object):
         self.xplane = []
         self.yplane = []
         sp = math.sin(self.padding)
-        for root in xrange(6):
+        for root in range(6):
             xplanes = []
             yplanes = []
             c, x, y = self.center[root], self.x[root], self.y[root]
-            for i in xrange(R + 1):
+            for i in range(R + 1):
                 xfp = self._fiducialXPlane(root, i)
                 yfp = self._fiducialYPlane(root, i)
                 f = 2.0 * float(i) / float(R) - 1.0
@@ -389,7 +393,7 @@ class QuadSpherePixelization(object):
         yb = 2.0 * float(iy) / float(self.resolution) - 1.0
         yt = 2.0 * float(iy + 1) / float(self.resolution) - 1.0
         c, x, y = self.center[root], self.x[root], self.y[root]
-        v = map(geom.normalize, [(c[0] + xl * x[0] + yb * y[0],
+        v = list(map(geom.normalize, [(c[0] + xl * x[0] + yb * y[0],
                                   c[1] + xl * x[1] + yb * y[1],
                                   c[2] + xl * x[2] + yb * y[2]),
                                  (c[0] + xr * x[0] + yb * y[0],
@@ -400,14 +404,14 @@ class QuadSpherePixelization(object):
                                   c[2] + xr * x[2] + yt * y[2]),
                                  (c[0] + xl * x[0] + yt * y[0],
                                   c[1] + xl * x[1] + yt * y[1],
-                                  c[2] + xl * x[2] + yt * y[2])])
+                                  c[2] + xl * x[2] + yt * y[2])]))
         if not fiducial and self.padding > 0.0:
             # Determine angles by which edge planes must be rotated outwards
             sp = math.sin(self.padding)
-            theta = map(lambda x: 0.5 * geom.cartesianAngularSep(x[0], x[1]),
-                        ((v[0], v[3]), (v[1], v[0]), (v[2], v[1]), (v[3], v[2])))
-            sina = map(lambda x: sp / math.cos(math.radians(x)), theta)
-            cosa = map(lambda x: math.sqrt(1.0 - x * x), sina)
+            theta = [0.5 * geom.cartesianAngularSep(x[0], x[1]) for
+                     x in ((v[0], v[3]), (v[1], v[0]), (v[2], v[1]), (v[3], v[2]))]
+            sina = [sp / math.cos(math.radians(x)) for x in theta]
+            cosa = [math.sqrt(1.0 - x * x) for x in sina]
             # find plane equations of fiducial pixel boundaries
             xlp = self.xplane[root][ix][0]
             ybp = self.yplane[root][iy][0]
@@ -419,10 +423,10 @@ class QuadSpherePixelization(object):
             xrp = self.xrot[root](xrp, sina[2], cosa[2])
             ytp = self.yrot[root](ytp, sina[3], cosa[3])
             # intersect rotated planes to find vertices of padded sky-pixel
-            v = map(geom.normalize, [geom.cross(xlp, ybp),
+            v = list(map(geom.normalize, [geom.cross(xlp, ybp),
                                      geom.cross(xrp, ybp),
                                      geom.cross(xrp, ytp),
-                                     geom.cross(xlp, ytp)])
+                                     geom.cross(xlp, ytp)]))
         return geom.SphericalConvexPolygon(v)
 
     def getCenter(self, pixelId):
@@ -574,7 +578,7 @@ class QuadSpherePixelization(object):
                             'to the sky-pixel intersection computation')
         pixels = []
         R = self.resolution
-        for root in xrange(6):
+        for root in range(6):
             # clip against padded root pixel edge planes
             poly = polygon
             for p in (self.xplane[root][0][2], self.xplane[root][R][1],
@@ -597,7 +601,7 @@ class QuadSpherePixelization(object):
         """Returns an iterator over the sky-pixel ids of all the pixels
         in this pixelization.
         """
-        return iter(xrange(len(self)))
+        return iter(range(len(self)))
 
     def __repr__(self):
         return ''.join([self.__class__.__name__, '(',
