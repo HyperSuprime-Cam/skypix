@@ -395,17 +395,17 @@ class QuadSpherePixelization(object):
         yt = 2.0 * float(iy + 1) / float(self.resolution) - 1.0
         c, x, y = self.center[root], self.x[root], self.y[root]
         v = list(map(geom.normalize, [(c[0] + xl * x[0] + yb * y[0],
-                                  c[1] + xl * x[1] + yb * y[1],
-                                  c[2] + xl * x[2] + yb * y[2]),
-                                 (c[0] + xr * x[0] + yb * y[0],
-                                  c[1] + xr * x[1] + yb * y[1],
-                                  c[2] + xr * x[2] + yb * y[2]),
-                                 (c[0] + xr * x[0] + yt * y[0],
-                                  c[1] + xr * x[1] + yt * y[1],
-                                  c[2] + xr * x[2] + yt * y[2]),
-                                 (c[0] + xl * x[0] + yt * y[0],
-                                  c[1] + xl * x[1] + yt * y[1],
-                                  c[2] + xl * x[2] + yt * y[2])]))
+                                       c[1] + xl * x[1] + yb * y[1],
+                                       c[2] + xl * x[2] + yb * y[2]),
+                                      (c[0] + xr * x[0] + yb * y[0],
+                                       c[1] + xr * x[1] + yb * y[1],
+                                       c[2] + xr * x[2] + yb * y[2]),
+                                      (c[0] + xr * x[0] + yt * y[0],
+                                       c[1] + xr * x[1] + yt * y[1],
+                                       c[2] + xr * x[2] + yt * y[2]),
+                                      (c[0] + xl * x[0] + yt * y[0],
+                                       c[1] + xl * x[1] + yt * y[1],
+                                       c[2] + xl * x[2] + yt * y[2])]))
         if not fiducial and self.padding > 0.0:
             # Determine angles by which edge planes must be rotated outwards
             sp = math.sin(self.padding)
@@ -425,9 +425,9 @@ class QuadSpherePixelization(object):
             ytp = self.yrot[root](ytp, sina[3], cosa[3])
             # intersect rotated planes to find vertices of padded sky-pixel
             v = list(map(geom.normalize, [geom.cross(xlp, ybp),
-                                     geom.cross(xrp, ybp),
-                                     geom.cross(xrp, ytp),
-                                     geom.cross(xlp, ytp)]))
+                                          geom.cross(xrp, ybp),
+                                          geom.cross(xrp, ytp),
+                                          geom.cross(xlp, ytp)]))
         return geom.SphericalConvexPolygon(v)
 
     def getCenter(self, pixelId):
@@ -455,10 +455,10 @@ class QuadSpherePixelization(object):
             elif root == 0:
                 neighbors = (self.id(2, R - iy - 2, R - 1),
                              self.id(2, R - iy - 1, R - 1),
-                             self.id(2, R - iy,     R - 1))
+                             self.id(2, R - iy, R - 1))
             elif root == 5:
                 neighbors = (self.id(2, iy - 1, 0),
-                             self.id(2, iy,     0),
+                             self.id(2, iy, 0),
                              self.id(2, iy + 1, 0))
             else:
                 r = root - 1
@@ -480,12 +480,12 @@ class QuadSpherePixelization(object):
                 return self.cornerNeighbors[root][3]
             elif root == 0:
                 neighbors = (self.id(4, iy - 1, R - 1),
-                             self.id(4, iy,     R - 1),
+                             self.id(4, iy, R - 1),
                              self.id(4, iy + 1, R - 1))
             elif root == 5:
                 neighbors = (self.id(4, R - iy - 2, 0),
                              self.id(4, R - iy - 1, 0),
-                             self.id(4, R - iy,     0))
+                             self.id(4, R - iy, 0))
             else:
                 r = root + 1
                 if r == 5:
@@ -507,7 +507,7 @@ class QuadSpherePixelization(object):
             elif root == 1:
                 neighbors = (self.id(5, R - ix - 2, 0),
                              self.id(5, R - ix - 1, 0),
-                             self.id(5, R - ix,     0))
+                             self.id(5, R - ix, 0))
             elif root == 2:
                 neighbors = (self.id(5, 0, ix - 1),
                              self.id(5, 0, ix),
@@ -523,9 +523,9 @@ class QuadSpherePixelization(object):
             else:
                 neighbors = (self.id(1, R - ix - 2, 0),
                              self.id(1, R - ix - 1, 0),
-                             self.id(1, R - ix,     0))
+                             self.id(1, R - ix, 0))
             return neighbors + (self.id(root, ix - 1, 1),
-                                self.id(root, ix,     1),
+                                self.id(root, ix, 1),
                                 self.id(root, ix + 1, 1),
                                 self.id(root, ix - 1, 0),
                                 self.id(root, ix + 1, 0))
@@ -534,18 +534,18 @@ class QuadSpherePixelization(object):
             if root == 0:
                 neighbors = (self.id(1, R - ix - 2, R - 1),
                              self.id(1, R - ix - 1, R - 1),
-                             self.id(1, R - ix,     R - 1))
+                             self.id(1, R - ix, R - 1))
             elif root == 1:
                 neighbors = (self.id(0, R - ix - 2, R - 1),
                              self.id(0, R - ix - 1, R - 1),
-                             self.id(0, R - ix,     R - 1))
+                             self.id(0, R - ix, R - 1))
             elif root == 2:
                 neighbors = (self.id(0, 0, R - ix - 2),
                              self.id(0, 0, R - ix - 1),
                              self.id(0, 0, R - ix))
             elif root == 3:
                 neighbors = (self.id(0, ix - 1, 0),
-                             self.id(0, ix,     0),
+                             self.id(0, ix, 0),
                              self.id(0, ix + 1, 0))
             elif root == 4:
                 neighbors = (self.id(0, R - 1, ix - 1),
@@ -553,10 +553,10 @@ class QuadSpherePixelization(object):
                              self.id(0, R - 1, ix + 1))
             else:
                 neighbors = (self.id(3, ix - 1, 0),
-                             self.id(3, ix,     0),
+                             self.id(3, ix, 0),
                              self.id(3, ix + 1, 0))
             return neighbors + (self.id(root, ix - 1, R - 2),
-                                self.id(root, ix,     R - 2),
+                                self.id(root, ix, R - 2),
                                 self.id(root, ix + 1, R - 2),
                                 self.id(root, ix - 1, R - 1),
                                 self.id(root, ix + 1, R - 1))
@@ -585,9 +585,9 @@ class QuadSpherePixelization(object):
             for p in (self.xplane[root][0][2], self.xplane[root][R][1],
                       self.yplane[root][0][2], self.yplane[root][R][1]):
                 poly = poly.clip(p)
-                if poly == None:
+                if poly is None:
                     break
-            if poly == None:
+            if poly is None:
                 # polygon doesn't intersect this root triangle
                 continue
             self._intersect(pixels, poly, root, (0, R, 0, R))
@@ -677,7 +677,7 @@ class QuadSpherePixelization(object):
         return 6 * R ** 2 - i - 1
 
     def coords(self, pixelId):
-        """Maps from a sky-pixel id to a root pixel number and x, y 
+        """Maps from a sky-pixel id to a root pixel number and x, y
         pixel coordinates.
         """
         if not isinstance(pixelId, numbers.Integral):
@@ -754,19 +754,19 @@ class QuadSpherePixelization(object):
             # Split x range and recurse
             xsplit = box[0] + dx//2
             p = poly.clip(self.xplane[root][xsplit][1])
-            if p != None:
+            if p is not None:
                 self._intersect(pixels, p, root, (box[0], xsplit, box[2], box[3]))
             p = poly.clip(self.xplane[root][xsplit][2])
-            if p != None:
+            if p is not None:
                 self._intersect(pixels, p, root, (xsplit, box[1], box[2], box[3]))
         else:
             # Split y range and recurse
             ysplit = box[2] + dy//2
             p = poly.clip(self.yplane[root][ysplit][1])
-            if p != None:
+            if p is not None:
                 self._intersect(pixels, p, root, (box[0], box[1], box[2], ysplit))
             p = poly.clip(self.yplane[root][ysplit][2])
-            if p != None:
+            if p is not None:
                 self._intersect(pixels, p, root, (box[0], box[1], ysplit, box[3]))
 
 
@@ -787,7 +787,7 @@ def createQuadSpherePixelization(policy=None):
 def imageToPolygon(wcs, widthPix, heightPix, padRad=0.0):
     """Computes and returns a spherical convex polygon approximation to the
     region of the unit sphere covered by an image specified with a WCS and
-    a width/height (pixels). The polygon is computed by connecting the 
+    a width/height (pixels). The polygon is computed by connecting the
     world coordinates of the 4 image corners with great circles, and can
     optionally be padded by padRad radians.
     """
