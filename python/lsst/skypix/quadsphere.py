@@ -792,7 +792,7 @@ def imageToPolygon(wcs, widthPix, heightPix, padRad=0.0):
     optionally be padded by padRad radians.
     """
     # Compute image corners
-    cd = wcs.getCDMatrix()
+    cd = wcs.getCdMatrix()
     xpad = math.degrees(padRad) / math.sqrt(cd[0, 0]**2 + cd[0, 1]**2)
     ypad = math.degrees(padRad) / math.sqrt(cd[1, 0]**2 + cd[1, 1]**2)
     xmin, ymin = -0.5 - xpad, -0.5 - ypad
