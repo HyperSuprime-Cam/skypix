@@ -27,9 +27,10 @@ import unittest
 
 import lsst.utils.tests
 import lsst.daf.base as dafBase
-import lsst.afw.image as afwImage
 import lsst.geom as geom
+from lsst.afw.geom import makeSkyWcs
 import lsst.skypix as skypix
+import lsst.afw.coord  # noqua import needed for SkyWcs
 
 
 class QuadSpherePixelizationTestCase(unittest.TestCase):
@@ -157,7 +158,7 @@ class QuadSpherePixelizationTestCase(unittest.TestCase):
         metadata.set("CD1_2", 1.85579539217196E-07)
         metadata.set("CD2_2", -5.10281493481982E-05)
         metadata.set("CD2_1", -8.27440751733828E-07)
-        wcs = afwImage.makeWcs(metadata)
+        wcs = makeSkyWcs(metadata)
         qs = skypix.createQuadSpherePixelization()
         poly = skypix.imageToPolygon(wcs, 1024, 1153)
         pixels = qs.intersect(poly)
